@@ -30,11 +30,14 @@ Open the models/db.go file and update the dsn variable with your MySQL connectio
 
 Run the following command to initialize the database:
 
+```bash
 go run main.go
 
 This will create the necessary tables in the database.
 
 ### Run the Application:
 
+```bash
 go run main.go
+
 The application will start on http://localhost:8080.
