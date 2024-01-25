@@ -5,6 +5,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/anonymousa10/forum-backendplsda/models"
@@ -15,12 +16,29 @@ import (
 var secretKey = []byte("secretkey") // Replace with a secure secret key
 
 // AuthMiddleware is a middleware to handle JWT authentication
+// AuthMiddleware is a middleware to handle JWT authentication
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString, err := c.Cookie("jwt_token")
+		authHeader := c.GetHeader("Authorization")
 
-		if err != nil {
-			fmt.Println("Error parsing JWT token:", err)
+		var tokenString string
+		if authHeader != "" {
+			bearerToken := strings.Split(authHeader, " ")
+			if len(bearerToken) == 2 {
+				tokenString = bearerToken[1]
+			}
+		}
+
+		// If no token was found in the Authorization header, try to get it from the cookies
+		if tokenString == "" {
+			tokenCookie, _ := c.Cookie("jwt_token")
+			if tokenCookie != "" {
+				tokenString = tokenCookie
+			}
+		}
+
+		if tokenString == "" {
+			fmt.Println("Missing Authorization header or cookie")
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
@@ -44,9 +62,12 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
 		fmt.Println("Authenticated user:", claims.Subject)
 
 		c.Set("username", claims.Subject)
+
+		c.Next() // Continue to the next handler
 	}
 }
 
