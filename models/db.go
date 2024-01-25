@@ -10,7 +10,7 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
-	dsn := "root:REPLACEPASSWORD@tcp(localhost:3306)/forumplsda?parseTime=true"
+	dsn := "root:new_password@tcp(localhost:3306)/forumplsda?parseTime=true"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err.Error())
