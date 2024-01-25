@@ -32,6 +32,7 @@ Run the following command to initialize the database:
 
 ```bash
 go run main.go
+```
 
 This will create the necessary tables in the database.
 
@@ -39,5 +40,6 @@ This will create the necessary tables in the database.
 
 ```bash
 go run main.go
+```
 
 The application will start on http://localhost:8080.
